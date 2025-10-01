@@ -1,0 +1,37 @@
+STORM TECHNOLOGIES - Q1 2024 BUSINESS REPORT
+
+SALES PERFORMANCE
+Total Revenue: £2,450,000 (15% increase YoY)
+Units Sold: 89,500
+Average Order Value: £27.37
+
+Top Product Categories:
+1. Computer Hardware - £857,500 (35% of revenue)
+2. Networking Equipment - £686,000 (28% of revenue)
+3. Software Licenses - £538,900 (22% of revenue)
+
+CUSTOMER ANALYTICS
+Total Active Customers: 1,245
+New Customers: 178 (15% increase)
+Retention Rate: 87%
+Customer Satisfaction: 4.3/5.0
+
+Customer Segments:
+- Enterprise (20%): 65% of revenue
+- SMB (45%): 28% of revenue
+- Individual (35%): 7% of revenue
+
+INVENTORY MANAGEMENT
+Stock Turnover: 6.8x annually
+Out of Stock Events: 12 (down 25%)
+Overstock Value: £185,000
+
+Supply Chain:
+- Average Lead Time: 14 days
+- On-Time Delivery: 92%
+- Supplier Quality: 4.1/5.0
+
+RECOMMENDATIONS
+1. Increase networking equipment stock
+2. Implement predictive analytics for forecasting
+3. Expand enterprise sales team
