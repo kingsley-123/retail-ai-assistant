@@ -3,10 +3,10 @@ Complete RAG pipeline with LLM integration.
 """
 from pathlib import Path
 from typing import List, Dict, Tuple
-from document_processor import DocumentProcessor
-from embeddings import EmbeddingGenerator
-from vector_store import VectorStore
-from llm_client import OllamaClient
+from .document_processor import DocumentProcessor
+from .embeddings import EmbeddingGenerator
+from .vector_store import VectorStore
+from .llm_client import OllamaClient
 
 
 class RAGPipeline:
