@@ -1,20 +1,22 @@
 """
-Complete RAG pipeline: documents -> chunks -> embeddings -> search.
+Complete RAG pipeline with LLM integration.
 """
 from pathlib import Path
 from typing import List, Dict, Tuple
 from document_processor import DocumentProcessor
 from embeddings import EmbeddingGenerator
 from vector_store import VectorStore
+from llm_client import OllamaClient
 
 
 class RAGPipeline:
-    """End-to-end RAG pipeline."""
+    """End-to-end RAG pipeline with LLM."""
     
     def __init__(self):
         self.doc_processor = DocumentProcessor(chunk_size=1000, chunk_overlap=200)
         self.embedding_generator = EmbeddingGenerator()
         self.vector_store = VectorStore(dimension=384)
+        self.llm = OllamaClient()
         
     def load_document(self, file_path: str):
         """Load and process a document into the vector store."""
@@ -44,23 +46,29 @@ class RAGPipeline:
         return results
     
     def answer_question(self, question: str, k: int = 3) -> str:
-        """Get answer with context from documents."""
+        """Get LLM-generated answer with context from documents."""
+        # Retrieve relevant chunks
         results = self.query(question, k=k)
         
         if not results:
-            return "No relevant information found."
+            return "No relevant information found in the documents."
         
-        # Format answer
-        answer = f"Based on the documents:\n\n"
+        # Build context from top results
+        context = "\n\n".join([doc['content'] for doc, _ in results])
+        
+        # Generate answer using LLM
+        answer = self.llm.generate_answer(question, context)
+        
+        # Add sources
+        sources = "\n\nSources:"
         for i, (doc, distance) in enumerate(results, 1):
-            answer += f"{i}. {doc['content'][:200]}...\n"
-            answer += f"   (Relevance: {1/(1+distance):.2%})\n\n"
+            sources += f"\n{i}. {doc['source']} (relevance: {1/(1+distance):.1%})"
         
-        return answer
+        return answer + sources
 
 
 def main():
-    """Test complete RAG pipeline."""
+    """Test complete RAG pipeline with LLM."""
     pipeline = RAGPipeline()
     
     # Load the sample business report
@@ -68,14 +76,16 @@ def main():
     
     # Test queries
     questions = [
-        "What was the total revenue?",
-        "How is customer satisfaction?",
-        "Tell me about inventory management",
+        "What was the total revenue in Q1 2024?",
+        "How many new customers did we acquire?",
+        "What is our customer satisfaction score?",
+        "Tell me about inventory management performance"
     ]
     
     for question in questions:
-        print(f"\nQuestion: {question}")
-        print("-" * 60)
+        print(f"\n{'='*70}")
+        print(f"Question: {question}")
+        print('='*70)
         answer = pipeline.answer_question(question, k=2)
         print(answer)
 
