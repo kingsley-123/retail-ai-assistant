@@ -213,44 +213,7 @@ Monthly Change: +£3,032
 
 
 ## 📁 Project Structure
-retail-ai-assistant/
-│
-├── app.py                                  # Streamlit web application
-├── requirements.txt                        # Python dependencies
-├── README.md                              # Project documentation
-│
-├── data/                                   # Data files
-│   ├── sample_report.txt                  # Sample business document
-│   ├── customer_data.csv                  # Customer dataset
-│   └── sales_data.csv                     # Sales time series data
-│
-├── src/                                    # Source code
-│   │
-│   ├── rag/                               # RAG system components
-│   │   ├── init.py
-│   │   ├── document_processor.py          # Text chunking & preprocessing
-│   │   ├── embeddings.py                  # Sentence embeddings generation
-│   │   ├── vector_store.py                # FAISS database operations
-│   │   ├── llm_client.py                  # Ollama LLM interface
-│   │   └── rag_pipeline.py                # Complete RAG pipeline
-│   │
-│   ├── agents/                            # AI agent framework
-│   │   ├── init.py
-│   │   ├── tools.py                       # Agent tools (search, calculate, format)
-│   │   ├── simple_agent.py                # Planning & execution agent
-│   │   ├── ml_tools.py                    # ML model integration tools
-│   │   └── rag_agent.py                   # RAG-enabled agent
-│   │
-│   └── ml/                                # Machine learning models
-│       ├── init.py
-│       ├── customer_segmentation.py       # K-means clustering
-│       ├── churn_prediction.py            # Random Forest classifier
-│       └── sales_forecasting.py           # Time series forecasting
-│
-└── models/                                # Saved model artifacts
-├── segmentation_model.json
-├── churn_model.json
-└── sales_forecast.json               
+<img width="630" height="611" alt="Image" src="https://github.com/user-attachments/assets/5b93a437-102d-44e0-911c-8f62ea6517b2" />     
 
 ## 📊 Business Impact
 
