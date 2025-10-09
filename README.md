@@ -1,17 +1,14 @@
-```markdown
 # Storm Technologies AI Business Intelligence Assistant
 
-> An intelligent business analytics system combining Retrieval-Augmented Generation (RAG), Large Language Models, and Machine Learning to provide comprehensive insights from business documents and data.
+An intelligent business analytics system combining Retrieval-Augmented Generation (RAG), Large Language Models, and Machine Learning to provide comprehensive insights from business documents and data.
 
----
 
 ## 🚀 Live Demo
 
 **Try it now:** [https://retail-ai-assistant-kadznzjszyhurmemplvjth.streamlit.app/](https://retail-ai-assistant-kadznzjszyhurmemplvjth.streamlit.app/)
 
-> **Note:** Cloud deployment runs ML analytics. Full LLM features available when running locally with Ollama.
+**Note:** Cloud deployment runs ML analytics. Full LLM features available when running locally with Ollama.
 
----
 
 ## 📘 Project Overview
 
@@ -33,7 +30,7 @@ Build an intelligent system that:
 - Delivers accurate sales forecasts for resource planning
 - Runs entirely on free, open-source technology stack
 
----
+
 
 ## 🛠️ Tools & Technologies Used
 
@@ -48,11 +45,11 @@ Build an intelligent system that:
 | **Deployment** | Streamlit Cloud | Free cloud hosting |
 | **Version Control** | Git/GitHub | Code management and collaboration |
 
----
+
+
 
 ## 📊 System Architecture
 
-```
 ┌─────────────────────────────────────────────────────────────┐
 │                   Streamlit Web Interface                    │
 │              (User Q&A + ML Analytics Dashboard)             │
@@ -78,9 +75,7 @@ Build an intelligent system that:
     │  Ollama  │                 │Customer/ │
     │Llama 3.2 │                 │Sales Data│
     └──────────┘                 └──────────┘
-```
 
----
 
 ## 📋 Features
 
@@ -115,7 +110,7 @@ Build an intelligent system that:
 - Trend analysis and growth metrics
 - Revenue planning and resource optimization
 
----
+
 
 ## 🎯 Model Performance
 
@@ -128,7 +123,7 @@ Build an intelligent system that:
 | **Sales Forecasting** | MAPE | 2.9% |
 | **Sales Forecasting** | RMSE | £4,349 |
 
----
+
 
 ## 🚀 Quick Start
 
@@ -168,7 +163,6 @@ streamlit run app.py
 
 The app will open at `http://localhost:8501`
 
----
 
 ## 💡 Usage Examples
 
@@ -217,44 +211,46 @@ Trend: ↗️ Upward (65.8% annual growth rate)
 Monthly Change: +£3,032
 ```
 
----
 
 ## 📁 Project Structure
-
-```
 retail-ai-assistant/
-├── app.py                          # Streamlit web application
-├── requirements.txt                # Python dependencies
-├── README.md                       # Project documentation
 │
-├── data/
-│   ├── sample_report.txt          # Sample business document
-│   ├── customer_data.csv          # Customer dataset
-│   └── sales_data.csv             # Sales time series data
+├── app.py                                  # Streamlit web application
+├── requirements.txt                        # Python dependencies
+├── README.md                              # Project documentation
 │
-├── src/
-│   ├── rag/
-│   │   ├── document_processor.py  # Text chunking & preprocessing
-│   │   ├── embeddings.py          # Sentence embeddings generation
-│   │   ├── vector_store.py        # FAISS database operations
-│   │   ├── llm_client.py          # Ollama interface
-│   │   └── rag_pipeline.py        # Complete RAG system
+├── data/                                   # Data files
+│   ├── sample_report.txt                  # Sample business document
+│   ├── customer_data.csv                  # Customer dataset
+│   └── sales_data.csv                     # Sales time series data
+│
+├── src/                                    # Source code
 │   │
-│   ├── agents/
-│   │   ├── tools.py               # Agent tools (search, calculate, format)
-│   │   ├── simple_agent.py        # Planning & execution agent
-│   │   ├── ml_tools.py            # ML model integration
-│   │   └── rag_agent.py           # RAG-enabled agent
+│   ├── rag/                               # RAG system components
+│   │   ├── init.py
+│   │   ├── document_processor.py          # Text chunking & preprocessing
+│   │   ├── embeddings.py                  # Sentence embeddings generation
+│   │   ├── vector_store.py                # FAISS database operations
+│   │   ├── llm_client.py                  # Ollama LLM interface
+│   │   └── rag_pipeline.py                # Complete RAG pipeline
 │   │
-│   └── ml/
-│       ├── customer_segmentation.py   # K-means clustering
-│       ├── churn_prediction.py        # Random Forest classifier
-│       └── sales_forecasting.py       # Time series forecasting
+│   ├── agents/                            # AI agent framework
+│   │   ├── init.py
+│   │   ├── tools.py                       # Agent tools (search, calculate, format)
+│   │   ├── simple_agent.py                # Planning & execution agent
+│   │   ├── ml_tools.py                    # ML model integration tools
+│   │   └── rag_agent.py                   # RAG-enabled agent
+│   │
+│   └── ml/                                # Machine learning models
+│       ├── init.py
+│       ├── customer_segmentation.py       # K-means clustering
+│       ├── churn_prediction.py            # Random Forest classifier
+│       └── sales_forecasting.py           # Time series forecasting
 │
-└── models/                        # Saved model artifacts
-```
-
----
+└── models/                                # Saved model artifacts
+├── segmentation_model.json
+├── churn_model.json
+└── sales_forecast.json               
 
 ## 📊 Business Impact
 
@@ -268,7 +264,6 @@ This system enables organizations to:
 | 🎯 **Marketing** | Targeted campaigns based on customer segments increase ROI |
 | ⏱️ **Efficiency** | Automated analysis reduces manual effort by 80% |
 
----
 
 ## 🔮 Future Enhancements
 
@@ -283,23 +278,12 @@ This system enables organizations to:
 - [ ] Automated model retraining pipeline with MLOps
 - [ ] Custom dashboard builder for business users
 
----
 
 ## 👤 Author
 
 **Kingsley Okonkwo**  
-MSc Data Science | University of Surrey
+MSc Business Analytics | University of Northampton
 
-[![GitHub](https://img.shields.io/badge/GitHub-kingsley--123-181717?logo=github)](https://github.com/kingsley-123)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-kingsleyokonkwo-0077B5?logo=linkedin)](https://linkedin.com/in/kingsleyokonkwo)
-
----
-
-## 📄 License
-
-This project is created as part of a job application portfolio for Storm Technologies.
-
----
 
 ## 🙏 Acknowledgments
 
