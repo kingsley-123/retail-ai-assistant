@@ -50,6 +50,7 @@ Build an intelligent system that:
 
 ## 📊 System Architecture
 
+<<<<<<< HEAD
 ![System Architecture](./architecture.svg)
 
 ## 📋 Features
