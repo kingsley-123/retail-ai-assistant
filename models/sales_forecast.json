@@ -1,0 +1,23 @@
+{
+  "forecast": [
+    {
+      "date": "2024-10-01",
+      "forecasted_sales": 142344.0
+    },
+    {
+      "date": "2024-11-01",
+      "forecasted_sales": 145376.0
+    },
+    {
+      "date": "2024-12-01",
+      "forecasted_sales": 148408.0
+    }
+  ],
+  "trend_analysis": {
+    "trend_direction": "Upward",
+    "monthly_change": 3031.99,
+    "overall_growth_rate": 65.85,
+    "recent_3mo_avg": 136000.0
+  },
+  "generated_date": "2025-10-09"
+}

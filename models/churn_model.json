@@ -1,0 +1,31 @@
+{
+  "feature_columns": [
+    "recency_days",
+    "frequency",
+    "monetary",
+    "tenure_months",
+    "avg_order_value"
+  ],
+  "feature_importance": [
+    {
+      "feature": "recency_days",
+      "importance": 0.304426282051282
+    },
+    {
+      "feature": "frequency",
+      "importance": 0.2456
+    },
+    {
+      "feature": "monetary",
+      "importance": 0.2325925925925926
+    },
+    {
+      "feature": "tenure_months",
+      "importance": 0.21738112535612542
+    },
+    {
+      "feature": "avg_order_value",
+      "importance": 0.0
+    }
+  ]
+}
