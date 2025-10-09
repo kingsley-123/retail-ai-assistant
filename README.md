@@ -50,7 +50,7 @@ Build an intelligent system that:
 
 ## 📊 System Architecture
 
-![System Architecture](./architecture.svg)
+<img width="1323" height="838" alt="Image" src="https://github.com/user-attachments/assets/85551721-cedf-4af7-8ee1-cffd2597c0aa" />
 
 ## 📋 Features
 
