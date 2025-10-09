@@ -18,23 +18,30 @@ st.set_page_config(
 
 # Initialize session state
 if 'initialized' not in st.session_state:
+    st.session_state.rag_available = False
+    st.session_state.ml_available = False
+    st.session_state.ollama_available = False
+    
+    # Try to load RAG pipeline
     try:
         from rag.rag_pipeline import RAGPipeline
-        from agents.ml_tools import MLToolKit
-        
-        with st.spinner("Loading AI models..."):
+        with st.spinner("Loading document search..."):
             st.session_state.rag_pipeline = RAGPipeline()
             st.session_state.rag_pipeline.load_document('data/sample_report.txt')
-        
+        st.session_state.rag_available = True
+    except Exception as e:
+        st.warning("⚠️ Document Q&A unavailable in cloud mode")
+    
+    # Try to load ML toolkit
+    try:
+        from agents.ml_tools import MLToolKit
         with st.spinner("Loading ML models..."):
             st.session_state.ml_toolkit = MLToolKit()
-        
-        st.session_state.initialized = True
-        st.session_state.ollama_available = True
+        st.session_state.ml_available = True
     except Exception as e:
-        st.warning("⚠️ Running in demo mode (Ollama not available). ML features still work!")
-        st.session_state.initialized = True
-        st.session_state.ollama_available = False
+        st.error(f"⚠️ ML features unavailable: {str(e)}")
+    
+    st.session_state.initialized = True
 
 # Sidebar
 st.sidebar.title("🤖 Storm Technologies")
@@ -118,52 +125,56 @@ if page == "🏠 Home":
 elif page == "💬 Document Q&A":
     st.title("📄 Document Question & Answer")
     
-    if not st.session_state.ollama_available:
-        st.warning("⚠️ LLM features require local Ollama installation. Showing vector search results only.")
-        st.markdown("**To run locally with full LLM features:**")
+    if not st.session_state.rag_available:
+        st.warning("⚠️ Document Q&A features unavailable in cloud deployment.")
+        st.markdown("**To run locally with full features:**")
         st.code("git clone https://github.com/kingsley-123/retail-ai-assistant\ncd retail-ai-assistant\nollama pull llama3.2\nstreamlit run app.py")
     else:
         st.markdown("Ask questions about your business documents using RAG + LLM")
-    
-    st.info("📁 Loaded: Storm Technologies Q1 2024 Business Report")
-    
-    with st.expander("💡 Try these sample questions"):
-        st.markdown("""
-        - What was the total revenue in Q1 2024?
-        - How many new customers did we acquire?
-        - What is our customer satisfaction score?
-        - Tell me about inventory management performance
-        - What are the top product categories by revenue?
-        """)
-    
-    question = st.text_input(
-        "Ask a question:",
-        placeholder="e.g., What was our Q1 revenue?"
-    )
-    
-    if st.button("Get Answer", type="primary"):
-        if question:
-            if st.session_state.ollama_available:
-                with st.spinner("Searching documents and generating answer..."):
-                    answer = st.session_state.rag_pipeline.answer_question(question, k=2)
-                    st.markdown("### Answer:")
-                    st.success(answer)
+        st.info("📁 Loaded: Storm Technologies Q1 2024 Business Report")
+        
+        with st.expander("💡 Try these sample questions"):
+            st.markdown("""
+            - What was the total revenue in Q1 2024?
+            - How many new customers did we acquire?
+            - What is our customer satisfaction score?
+            - Tell me about inventory management performance
+            - What are the top product categories by revenue?
+            """)
+        
+        question = st.text_input(
+            "Ask a question:",
+            placeholder="e.g., What was our Q1 revenue?"
+        )
+        
+        if st.button("Get Answer", type="primary"):
+            if question:
+                if st.session_state.ollama_available:
+                    with st.spinner("Searching documents and generating answer..."):
+                        answer = st.session_state.rag_pipeline.answer_question(question, k=2)
+                        st.markdown("### Answer:")
+                        st.success(answer)
+                else:
+                    with st.spinner("Searching documents..."):
+                        results = st.session_state.rag_pipeline.query(question, k=2)
+                        st.markdown("### Relevant Information Found:")
+                        for i, (doc, distance) in enumerate(results, 1):
+                            with st.expander(f"Result {i} (Relevance: {1/(1+distance):.1%})"):
+                                st.write(doc['content'][:500] + "...")
             else:
-                with st.spinner("Searching documents..."):
-                    results = st.session_state.rag_pipeline.query(question, k=2)
-                    st.markdown("### Relevant Information Found:")
-                    for i, (doc, distance) in enumerate(results, 1):
-                        with st.expander(f"Result {i} (Relevance: {1/(1+distance):.1%})"):
-                            st.write(doc['content'][:500] + "...")
-        else:
-            st.warning("Please enter a question")
+                st.warning("Please enter a question")
 
 # ML ANALYTICS PAGE
 elif page == "📊 ML Analytics":
     st.title("📊 Machine Learning Analytics")
     
-    if not st.session_state.ollama_available:
-        st.info("✅ ML Analytics fully functional in cloud deployment")
+    if not st.session_state.ml_available:
+        st.error("⚠️ ML toolkit failed to load. This may be due to missing dependencies or initialization errors.")
+        st.markdown("**To run locally:**")
+        st.code("git clone https://github.com/kingsley-123/retail-ai-assistant\ncd retail-ai-assistant\npip install -r requirements.txt\nstreamlit run app.py")
+        st.stop()
+    
+    st.info("✅ ML Analytics fully functional")
     
     tab1, tab2, tab3 = st.tabs([
         "👥 Customer Segmentation", 
@@ -177,8 +188,11 @@ elif page == "📊 ML Analytics":
         
         if st.button("Run Segmentation Analysis"):
             with st.spinner("Analyzing customer segments..."):
-                result = st.session_state.ml_toolkit.analyze_customer_segments()
-                st.text(result)
+                try:
+                    result = st.session_state.ml_toolkit.analyze_customer_segments()
+                    st.text(result)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
     
     with tab2:
         st.markdown("### Churn Risk Prediction")
@@ -197,10 +211,13 @@ elif page == "📊 ML Analytics":
         
         if st.button("Predict Churn Risk"):
             with st.spinner("Analyzing churn risk..."):
-                result = st.session_state.ml_toolkit.predict_customer_churn(
-                    recency, frequency, monetary, tenure, avg_order
-                )
-                st.text(result)
+                try:
+                    result = st.session_state.ml_toolkit.predict_customer_churn(
+                        recency, frequency, monetary, tenure, avg_order
+                    )
+                    st.text(result)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
     
     with tab3:
         st.markdown("### Sales Forecasting")
@@ -210,8 +227,11 @@ elif page == "📊 ML Analytics":
         
         if st.button("Generate Forecast"):
             with st.spinner("Generating sales forecast..."):
-                result = st.session_state.ml_toolkit.forecast_sales(periods=periods)
-                st.text(result)
+                try:
+                    result = st.session_state.ml_toolkit.forecast_sales(periods=periods)
+                    st.text(result)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
 
 # Footer
 st.sidebar.markdown("---")
