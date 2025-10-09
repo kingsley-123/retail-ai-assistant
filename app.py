@@ -9,9 +9,6 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
-from rag.rag_pipeline import RAGPipeline
-from agents.ml_tools import MLToolKit
-
 # Page config
 st.set_page_config(
     page_title="Storm Technologies AI Assistant",
@@ -20,14 +17,24 @@ st.set_page_config(
 )
 
 # Initialize session state
-if 'rag_pipeline' not in st.session_state:
-    with st.spinner("Loading AI models..."):
-        st.session_state.rag_pipeline = RAGPipeline()
-        st.session_state.rag_pipeline.load_document('data/sample_report.txt')
-
-if 'ml_toolkit' not in st.session_state:
-    with st.spinner("Loading ML models..."):
-        st.session_state.ml_toolkit = MLToolKit()
+if 'initialized' not in st.session_state:
+    try:
+        from rag.rag_pipeline import RAGPipeline
+        from agents.ml_tools import MLToolKit
+        
+        with st.spinner("Loading AI models..."):
+            st.session_state.rag_pipeline = RAGPipeline()
+            st.session_state.rag_pipeline.load_document('data/sample_report.txt')
+        
+        with st.spinner("Loading ML models..."):
+            st.session_state.ml_toolkit = MLToolKit()
+        
+        st.session_state.initialized = True
+        st.session_state.ollama_available = True
+    except Exception as e:
+        st.warning("⚠️ Running in demo mode (Ollama not available). ML features still work!")
+        st.session_state.initialized = True
+        st.session_state.ollama_available = False
 
 # Sidebar
 st.sidebar.title("🤖 Storm Technologies")
@@ -101,18 +108,25 @@ if page == "🏠 Home":
         - Pandas, NumPy
         - Streamlit (Web interface)
         - GitHub (Version control)
-        - Free cloud hosting
+        - Streamlit Cloud (Free hosting)
         """)
+    
+    st.markdown("---")
+    st.info("💡 **Note:** Full LLM features available when running locally with Ollama. Cloud version demonstrates ML analytics.")
 
 # DOCUMENT Q&A PAGE
 elif page == "💬 Document Q&A":
     st.title("📄 Document Question & Answer")
-    st.markdown("Ask questions about your business documents using RAG + LLM")
     
-    # Show loaded documents
+    if not st.session_state.ollama_available:
+        st.warning("⚠️ LLM features require local Ollama installation. Showing vector search results only.")
+        st.markdown("**To run locally with full LLM features:**")
+        st.code("git clone https://github.com/kingsley-123/retail-ai-assistant\ncd retail-ai-assistant\nollama pull llama3.2\nstreamlit run app.py")
+    else:
+        st.markdown("Ask questions about your business documents using RAG + LLM")
+    
     st.info("📁 Loaded: Storm Technologies Q1 2024 Business Report")
     
-    # Sample questions
     with st.expander("💡 Try these sample questions"):
         st.markdown("""
         - What was the total revenue in Q1 2024?
@@ -122,7 +136,6 @@ elif page == "💬 Document Q&A":
         - What are the top product categories by revenue?
         """)
     
-    # Question input
     question = st.text_input(
         "Ask a question:",
         placeholder="e.g., What was our Q1 revenue?"
@@ -130,11 +143,18 @@ elif page == "💬 Document Q&A":
     
     if st.button("Get Answer", type="primary"):
         if question:
-            with st.spinner("Searching documents and generating answer..."):
-                answer = st.session_state.rag_pipeline.answer_question(question, k=2)
-                
-                st.markdown("### Answer:")
-                st.success(answer)
+            if st.session_state.ollama_available:
+                with st.spinner("Searching documents and generating answer..."):
+                    answer = st.session_state.rag_pipeline.answer_question(question, k=2)
+                    st.markdown("### Answer:")
+                    st.success(answer)
+            else:
+                with st.spinner("Searching documents..."):
+                    results = st.session_state.rag_pipeline.query(question, k=2)
+                    st.markdown("### Relevant Information Found:")
+                    for i, (doc, distance) in enumerate(results, 1):
+                        with st.expander(f"Result {i} (Relevance: {1/(1+distance):.1%})"):
+                            st.write(doc['content'][:500] + "...")
         else:
             st.warning("Please enter a question")
 
@@ -142,13 +162,15 @@ elif page == "💬 Document Q&A":
 elif page == "📊 ML Analytics":
     st.title("📊 Machine Learning Analytics")
     
+    if not st.session_state.ollama_available:
+        st.info("✅ ML Analytics fully functional in cloud deployment")
+    
     tab1, tab2, tab3 = st.tabs([
         "👥 Customer Segmentation", 
         "⚠️ Churn Prediction", 
         "📈 Sales Forecasting"
     ])
     
-    # Customer Segmentation Tab
     with tab1:
         st.markdown("### Customer Segmentation Analysis")
         st.markdown("Customers grouped by RFM (Recency, Frequency, Monetary) behavior")
@@ -158,7 +180,6 @@ elif page == "📊 ML Analytics":
                 result = st.session_state.ml_toolkit.analyze_customer_segments()
                 st.text(result)
     
-    # Churn Prediction Tab
     with tab2:
         st.markdown("### Churn Risk Prediction")
         st.markdown("Predict which customers are at risk of leaving")
@@ -181,7 +202,6 @@ elif page == "📊 ML Analytics":
                 )
                 st.text(result)
     
-    # Sales Forecasting Tab
     with tab3:
         st.markdown("### Sales Forecasting")
         st.markdown("Predict future sales based on historical trends")
